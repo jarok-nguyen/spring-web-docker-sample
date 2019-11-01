@@ -16,10 +16,11 @@ services:
       - MYSQL_PASSWORD=test
     networks:
       - jarok-network
+    # command login to mysql server
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - C:/mysql_data/ecomdashapp-init-data:/docker-entrypoint-initdb.d
-      - C:/mysql_data/ecomdashapp:/var/lib/mysql
+      - C:/mysql_data/ecomdashapp-init-data:/docker-entrypoint-initdb.d # init database via mapping source has sql file
+      - C:/mysql_data/ecomdashapp:/var/lib/mysql # mapping mysql data to local machine
 
   spring-boot-docker:
     restart: on-failure
