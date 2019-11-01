@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  # put service name in mysql host configure in application.properties
+  mysql-db:
+    image: mysql:latest
+    #    image: mysql:5.7.22
+    container_name: mysqldb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ecomDashApp
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+    networks:
+      - jarok-network
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - C:/mysql_data/ecomdashapp-init-data:/docker-entrypoint-initdb.d
+      - C:/mysql_data/ecomdashapp:/var/lib/mysql
+
+  spring-boot-docker:
+    restart: on-failure
+    image: springio/demo-docker
+    container_name: spring-docker
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    networks:
+      - jarok-network
+    depends_on:
+      - mysql-db
+    ports:
+      - "80:8080"
+
+networks:
+  jarok-network:
+    driver: bridge
