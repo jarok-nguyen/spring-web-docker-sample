@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   # put service name in mysql host configure in application.properties
@@ -34,8 +34,23 @@ services:
     depends_on:
       - mysql-db
     ports:
-      - "80:8080"
+      - "8080"
+
+  nginx:
+    container_name: web_nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - spring-boot-docker
+    networks:
+      - jarok-network
 
 networks:
   jarok-network:
+    name: jarok-global-net
     driver: bridge
